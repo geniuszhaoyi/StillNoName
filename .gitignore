@@ -1,3 +1,19 @@
+#################
+#My ignored_files setting
+#################
+
+Database/
+bin/
+obj/
+include/
+lib/
+*.o
+*.exe
+*.layout
+*.depend
+*.cbp
+*.dll
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
