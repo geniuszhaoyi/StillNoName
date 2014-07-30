@@ -59,7 +59,7 @@ int main(void){
     MYSQL_ROW sql_row;
 
     my_conn=mysql_init(NULL);
-    if(mysql_real_connect(my_conn,"127.0.0.1","root","zy19930108","db",3306,NULL,0)){
+    if(mysql_real_connect(my_conn,"192.168.10.100","zhaoyi","zhaoyi","CasDB",3306,NULL,0)){
         FILE *fout=fopen("d:/out.sql","w");
         char path[]="C:/Users/ZhaoYi/Desktop/NNY-Database/Database/";
         strcpy(buffer,path);
@@ -109,7 +109,7 @@ int main(void){
                     if(check_pam(str+i,pam)){
                         for(j=0;j<LEN;j++) nt[j]=(str+i-LEN)[j];
                         nt[j]=0;
-                        sprintf(buffer,"\"%d\",\"%d\",\"%d\",\"%c\",\"%s\",\"%s\"",Chr_No,i,i+LEN-1,'+',nt,pam);
+                        sprintf(buffer,"\"%d\",\"%d\",\"%d\",\"%c\",\"%s\",\"%s\"",Chr_No,i-LEN,i-1+req_pam_len,'+',nt,pam);
                         fprintf(fout,"%s\n",buffer);
                         count++;
                     }
@@ -120,15 +120,16 @@ int main(void){
                     if(check_pam(str+i,req_pam_rev)){
                         for(j=0;j<LEN;j++) nt[j]=dna_rev_char((str+i+req_pam_len)[LEN-j-1]);
                         nt[j]=0;
-                        sprintf(buffer,"\"%d\",\"%d\",\"%d\",\"%c\",\"%s\",\"%s\"",Chr_No,i+req_pam_len-LEN,i+req_pam_len-1,'-',nt,pam);
+                        sprintf(buffer,"\"%d\",\"%d\",\"%d\",\"%c\",\"%s\",\"%s\"",Chr_No,i,i+req_pam_len+LEN-1,'-',nt,pam);
                         fprintf(fout,"%s\n",buffer);
                         count++;
                     }
                 }
             }
         }
-        int res2=mysql_query(my_conn,"load data infile 'd:/out.sql' ignore into table Table_sgrna fields terminated by ',' enclosed by '\"' lines terminated by '\r\n' (Chr_No, sgrna_start, sgrna_end, sgrna_strand, sgrna_seq, sgrna_PAM);");
+        int res2=mysql_query(my_conn,"load data infile 'd:/out.sql' ignore into table Table_sgRNA fields terminated by ',' enclosed by '\"' lines terminated by '\r\n' (Chr_No, sgrna_start, sgrna_end, sgrna_strand, sgrna_seq, sgrna_PAM);");
         if(res2!=0) fprintf(stderr,"Load error %d:%s\n",mysql_errno(my_conn),mysql_error(my_conn));
+        printf(">>%d\n",count);
         fclose(fout);
     }
     printf("%d rows will be affected\n",count);
